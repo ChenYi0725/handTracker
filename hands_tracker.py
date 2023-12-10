@@ -14,6 +14,7 @@ class HandTracker:
     def onMouse(self,event, x, y, flags, param):
         if event == cv2.EVENT_LBUTTONDOWN:
             self.handTrackingModel.recorder.isRecording = True
+            self.handTrackingModel.isRelativeRecording = True
 
     def start(self): 
         while True:
@@ -26,21 +27,17 @@ class HandTracker:
             if cv2.waitKey(1) == ord('q'):      #按下q關閉
                 break 
         self.showData()
+        print('=============')
+        print(self.handTrackingModel.relativeLocationArray)
     
     def showData(self):
         dataList = self.handTrackingModel.recorder.sortDataForRegression()
         xList = self.handTrackingModel.recorder.getCertainIndexData(index=1,allDataList=dataList)
         yList = self.handTrackingModel.recorder.getCertainIndexData(index=2,allDataList=dataList)
-        # print("x:")
-        # print(xList)
-        # print("=======")
-        # print("y:")
-        # print(yList)
         for i in range(-21,22):
             if i == 0:      #遇0跳過
                 continue
             print(i)
-            # print(xList[i])
             self.makeTrail(xList=xList[i],yList=yList[i])    
         #從-21->21
     

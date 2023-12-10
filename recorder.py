@@ -11,6 +11,7 @@ class Recorder:
         self.recordTimes = 0
         self.recordedFrame = 0
     
+    
     def startRecord(self):
         self.isRecording = True        
     
@@ -38,6 +39,9 @@ class Recorder:
         else:
             pass
     
+  
+
+
     def calculateDelta(self):
         isFirstData = True
         
