@@ -113,13 +113,14 @@ class HandTrackingModel:
                 # print(knnArray)
                 if(isRightHand):
                     predictResult = self.knnModel.predictRightHand(knnArray) 
-                    
+                    self.drawHandsPredictResult(predictResult,handMarks.landmark[12].x,handMarks.landmark[12].y)
                 else:
-                    predictResult = self.knnModel.predictLeftHand(knnArray) 
-                    
+                    predictResult = self.knnModel.predictLeftHand(knnArray)
+                # print(predictResult)
                 # self.drawHandsPredictResult(1,handMarks.landmark[12].x,handMarks.landmark[12].y)
-                self.drawHandsPredictResult(predictResult,handMarks.landmark[12].x,handMarks.landmark[12].y)
-                print(predictResult)
+                
+                # print(predictResult)
+            
                 handMarkInfoList = []
                 knnArray = []
                         
@@ -128,6 +129,7 @@ class HandTrackingModel:
                     print("============")
                     self.getNodeRelativeLocation(handMarks)
                     print(self.relativeLocationArray)
+
             self.isRelativeRecording = False
                     
          

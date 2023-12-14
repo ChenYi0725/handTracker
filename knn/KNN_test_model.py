@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 # import KNN_model_database as db
 import importlib
 
-KNN_model_database = importlib.import_module('KNN_model_database')
+KNN_model_database = importlib.import_module('KNNDataBase')
 k1Accuracy = []
 k2Accuracy = []
 k3Accuracy = []

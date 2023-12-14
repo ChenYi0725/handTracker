@@ -1,18 +1,30 @@
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import Normalizer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 import importlib
 
+
+# dataModel = importlib.import_module('KNNDataBase')
+
+# print("[")
+# for i in range(1,21):
+#     dataList = getattr(dataModel,f'right{i}Data',None)
+#     labelList = getattr(dataModel,f'right{i}Label',None)    
+#     print(f'{dataList[-1]},')
+# print("]")
+
+
 class KnnModel:
     def __init__(self,dataModel):
-        self.scaler = StandardScaler()
+        self.scaler = Normalizer()
         self.knnClassifier = KNeighborsClassifier(n_neighbors=7)
         self.KnnModelDataBase = dataModel
 
     def predictSingleNode(self,inputData):
-        newDataScaled = self.scaler.transform(inputData) #標準化輸入資料
-        prediction = self.knnClassifier.predict(newDataScaled)
+        scaledData = self.scaler.transform(inputData) #標準化輸入資料
+        prediction = self.knnClassifier.predict(scaledData)
         return prediction
 
     def predictLeftHand(self,handNodeList):
@@ -27,8 +39,11 @@ class KnnModel:
             # print(handNodeList)
             singlePredictResult = self.predictSingleNode([handNodeList[i-1]])
             resultList.append(singlePredictResult)
+        # for i in range(5):
+        #     del resultList[0]   
+
         finalPredictResult = max(resultList,key=resultList.count)
-        return finalPredictResult
+        return finalPredictResult[0]
 
     def predictRightHand(self,handNodeList):
         resultList = []
@@ -42,8 +57,34 @@ class KnnModel:
             # print(handNodeList)
             singlePredictResult = self.predictSingleNode([handNodeList[i-1]])
             resultList.append(singlePredictResult)
+        # for i in range(5):
+            # del resultList[0] 
         finalPredictResult = max(resultList,key=resultList.count)
-        return finalPredictResult
-# knnModel = KnnModel()
-# knnModel.predictLeftHand([[24, -32],[63, -50],[101, -49],[131, -43],[53, -69],[94, -77],[125, -72],[149, -64],[40, -45],[90, -51],[166, 47],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],])
-# knnModel.predictRightHand([[24, -32],[63, -50],[101, -49],[131, -43],[53, -69],[94, -77],[125, -72],[149, -64],[40, -45],[90, -51],[166, 47],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],[24, -32],])
+        # print(resultList)
+        return finalPredictResult[0]
+
+mydownlist = [
+[-24, -28],
+[-55, -48],
+[-90, -47],
+[-116, -41],
+[-40, -61],
+[-82, -74],
+[-116, -68],
+[-142, -59],
+[-28, -35],
+[-82, -42],
+[-125, -38],
+[-157, -32],
+[-25, -4],
+[-82, -3],
+[-126, -1],
+[-157, 5],
+[-31, 28],
+[-84, 29],
+[-118, 24],
+[-143, 21],
+]
+# myleftlist = [[ -21, -26], [ -48, -47], [ -74, -55], [ -94, -55], [ -38, -64], [ -59, -81], [ -83, -80], [ -104, -75], [ -28, -45], [ -67, -49], [ -100, -46], [ -125, -42], [ -23, -20], [ -64, -20], [ -95, -19], [ -118, -17], [ -24, 5], [ -64, 3], [ -89, 1], [ -110, 0]]
+# knnModel = KnnModel(importlib.import_module('KNNDataBase'))
+# print(knnModel.predictRightHand(mydownlist))
