@@ -1,6 +1,5 @@
 import cv2
 import mediapipe as mp
-import recorder as r
 from firebase import firebase
 from knn import KNN_model
 from knn import KNNDataBase
@@ -14,13 +13,13 @@ class HandTrackingModel:
         self.mpDraw = mp.solutions.drawing_utils        
         self.markStyle = self.mpDraw.DrawingSpec(color=(0,255,0),thickness=5)
         self.connectionStyle = self.mpDraw.DrawingSpec(color=(255,255,255),thickness=2)
-        self.recorder = r.Recorder()
         self.relativeLocationArray = []
         self.isRelativeRecording = False
         self.dataModel = importlib.import_module('knn.KNNDataBase')
         self.knnModel = KNN_model.KnnModel(dataModel=self.dataModel)
         self.retrieveData = 0
-        self.fireBase = firebase.FirebaseApplication('https://python-test-45d7a-default-rtdb.asia-southeast1.firebasedatabase.app/',None)
+        self.fireBaseURL = 'https://cube-bddd3-default-rtdb.asia-southeast1.firebasedatabase.app/'
+        self.fireBase = firebase.FirebaseApplication(self.fireBaseURL,None)
 
 
 
@@ -95,6 +94,7 @@ class HandTrackingModel:
         outputList.append(x)
         outputList.append(y)
         return outputList
+    
     def updateMovementToServer(self,currentMove):
         self.fireBase.put('','currentMove',currentMove)
     
@@ -114,30 +114,29 @@ class HandTrackingModel:
                     handMarkInfoList.append(self.enterMarkInfo(isRightHand,xPosition,yPosition))
                     
                     self.drawHandsMarksInfo(i,xPosition,yPosition)
-                    #self.recorder.record(i+1,xPosition,yPosition,zPosition,isRightHand,self.image)
+                
 
                 knnArray = self.processListForKnn(handMarkInfoList)
-                # print(isRightHand)
-                # print(knnArray)
+           
                 if(isRightHand):
                     predictResult = self.knnModel.predictRightHand(knnArray) 
                     self.drawHandsPredictResult(predictResult,handMarks.landmark[12].x,handMarks.landmark[12].y)
                 else:
                     predictResult = self.knnModel.predictLeftHand(knnArray)
-                #self.updateMovementToServer(predictResult)
-          
+                
+                self.updateMovementToServer(predictResult)
                 handMarkInfoList = []
                 knnArray = []
                         
                 
                 if(self.isRelativeRecording):
-                    print("============")
+                    #print("============")
                     self.getNodeRelativeLocation(handMarks)
-                    print(self.relativeLocationArray)
+                   # print(self.relativeLocationArray)
 
             if ( self.isRelativeRecording == True ):
                 self.retrieveData = self.retrieveData + 1
-                print(f"Retreve : {self.retrieveData}")
+                #print(f"Retreve : {self.retrieveData}")
                 self.isRelativeRecording = False
                     
          
